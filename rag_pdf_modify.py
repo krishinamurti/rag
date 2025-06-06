@@ -123,19 +123,16 @@ def initial_not_select(selected_model):
     print(st.session_state)
     for msg in st.session_state.messages:
         st.chat_message(msg["role"]).write(msg["content"])
-
-    prompt = st.chat_input()
-     #  if not YOUR_OPENAI_API_KEY:
-      #      st.info("Please add your OpenAI API key to continue.")
-       #     st.stop()
-
-    client = OpenAI()
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    st.chat_message("user").write(prompt)
-    response = client.chat.completions.create(model=selected_model, messages=st.session_state.messages)
-    msg = response.choices[0].message.content
-    st.session_state.messages.append({"role": "assistant", "content": msg})
-    st.chat_message("assistant").write(msg)
+   # prompt=""
+    if st.chat_input() is not False:
+        prompt = st.chat_input()
+        client = OpenAI()
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        st.chat_message("user").write(prompt)
+        response = client.chat.completions.create(model=selected_model, messages=st.session_state.messages)
+        msg = response.choices[0].message.content
+        st.session_state.messages.append({"role": "assistant", "content": msg})
+        st.chat_message("assistant").write(msg)
 
 @st.cache_resource
 def chaining(_pages,selected_model,halu):
