@@ -124,7 +124,7 @@ def initial_not_select(selected_model):
     for msg in st.session_state.messages:
         st.chat_message(msg["role"]).write(msg["content"])
    # prompt=""
-    if prompt := st.chat_input():
+    if prompt := st.chat_input(key=1):
         client = OpenAI()
         st.session_state.messages.append({"role": "user", "content": prompt})
         st.chat_message("user").write(prompt)
