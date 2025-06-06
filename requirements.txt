@@ -6,3 +6,4 @@ langchain-core
 langchain-chroma
 pypdf
 langchain-text-splitters
+tiktoken
