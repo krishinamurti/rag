@@ -56,13 +56,13 @@ def create_vector_store(_docs):
 def get_vectorstore():
     persist_directory = "./chroma_pdf_db"
     print(persist_directory)
-    if os.path.exists(persist_directory):
-        return Chroma(
-            persist_directory=persist_directory,
-            embedding_function=OpenAIEmbeddings(model='text-embedding-3-small')
-        )
-    else:
-        return 0
+    #if os.path.exists(persist_directory):
+    return Chroma(
+        persist_directory=persist_directory,
+        embedding_function=OpenAIEmbeddings(model='text-embedding-3-small')
+    )
+    #else:
+     #   return 0
 
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
@@ -124,18 +124,18 @@ def initial_not_select(selected_model):
     for msg in st.session_state.messages:
         st.chat_message(msg["role"]).write(msg["content"])
 
-    #if prompt := st.chat_input():
+    prompt = st.chat_input()
      #  if not YOUR_OPENAI_API_KEY:
       #      st.info("Please add your OpenAI API key to continue.")
        #     st.stop()
 
-        client = OpenAI()
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        st.chat_message("user").write(prompt)
-        response = client.chat.completions.create(model=selected_model, messages=st.session_state.messages)
-        msg = response.choices[0].message.content
-        st.session_state.messages.append({"role": "assistant", "content": msg})
-        st.chat_message("assistant").write(msg)
+    client = OpenAI()
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.chat_message("user").write(prompt)
+    response = client.chat.completions.create(model=selected_model, messages=st.session_state.messages)
+    msg = response.choices[0].message.content
+    st.session_state.messages.append({"role": "assistant", "content": msg})
+    st.chat_message("assistant").write(msg)
 
 @st.cache_resource
 def chaining(_pages,selected_model,halu):
@@ -202,7 +202,7 @@ else:
 
     # Streamlit UI
     st.header("항공통신소 Q&A 챗봇 💬")
-    selection = st.selectbox("ChatGpt,기존 Database(노하우 등), PDF ", ("ChatGpt","Database","PDF"))
+    selection = st.selectbox("ChatGpt,기존 Database(노하우 등), PDF ", (" ", "ChatGpt", "Database", "PDF"))
     option = st.selectbox("Select GPT Model", ("gpt-4.1-mini", "gpt-4.1"))
     #st.slider('몇살인가요?', 0, 130, 25)
     halu_t = st.slider("기존 문서로 답변: 0, 창의력 추가 답변: 1", 0.0,1.0,(0.0))
