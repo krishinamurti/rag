@@ -54,7 +54,7 @@ def create_vector_store(_docs):
 #만약 기존에 저장해둔 ChromaDB가 있는 경우, 이를 로드
 @st.cache_resource
 def get_vectorstore():
-    persist_directory = "./chroma_db"
+    persist_directory = "./chroma_pdf_db"
     print(persist_directory)
     if os.path.exists(persist_directory):
         return Chroma(
@@ -124,10 +124,10 @@ def initial_not_select(selected_model):
     for msg in st.session_state.messages:
         st.chat_message(msg["role"]).write(msg["content"])
 
-    if prompt := st.chat_input():
-        if not YOUR_OPENAI_API_KEY:
-            st.info("Please add your OpenAI API key to continue.")
-            st.stop()
+    #if prompt := st.chat_input():
+     #  if not YOUR_OPENAI_API_KEY:
+      #      st.info("Please add your OpenAI API key to continue.")
+       #     st.stop()
 
         client = OpenAI()
         st.session_state.messages.append({"role": "user", "content": prompt})
