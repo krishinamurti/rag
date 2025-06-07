@@ -16,11 +16,14 @@ from langchain_community.chat_message_histories.streamlit import StreamlitChatMe
 from langchain_core.output_parsers import StrOutputParser
 from openai import OpenAI
 #거의 최종버전
+################### 배포 때문에 추가
+###https://discuss.streamlit.io/t/chromadb-sqlite3-your-system-has-an-unsupported-version-of-sqlite3/90975
 
 import pysqlite3
 import sys
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 import sqlite3
+#########################
 #오픈AI API 키 설정
 os.environ["OPENAI_API_KEY"] = st.secrets['OPENAI_API_KEY']
 
@@ -183,7 +186,7 @@ if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 
 #login
-"""
+
 def login():
     if id == "admin" or "a":
         st.session_state["logged_in"] = True
@@ -199,36 +202,71 @@ if not st.session_state["logged_in"]:
     if st.button("Login"):
         login()
 else:
-"""
 
-    # Streamlit UI
-st.header("항공통신소 Q&A 챗봇 💬")
-selection = st.selectbox("ChatGpt,기존 Database(노하우 등), PDF ", ("ChatGpt", "Database", "PDF"))
-option = st.selectbox("Select GPT Model", ("gpt-4.1-mini", "gpt-4.1"))
-#st.slider('몇살인가요?', 0, 130, 25)
-halu_t = st.slider("기존 문서로 답변: 0, 창의력 추가 답변: 1", 0.0,1.0,(0.0))
-#halu = st.selectbox("기존 문서로 답변: 0, 창의력 추가 답변: 1",("0","0.5","1"))
 
-halu= str(halu_t)
+        # Streamlit UI
+    st.header("항공통신소 Q&A 챗봇 💬")
+    selection = st.selectbox("ChatGpt,기존 Database(노하우 등), PDF ", ("ChatGpt", "Database", "PDF"))
+    option = st.selectbox("Select GPT Model", ("gpt-4.1-mini", "gpt-4.1"))
+    #st.slider('몇살인가요?', 0, 130, 25)
+    halu_t = st.slider("기존 문서로 답변: 0, 창의력 추가 답변: 1", 0.0,1.0,(0.0))
+    #halu = st.selectbox("기존 문서로 답변: 0, 창의력 추가 답변: 1",("0","0.5","1"))
 
-#print(halu_t)
-if selection =="ChatGpt":
-    initial_not_select(option)
+    halu= str(halu_t)
 
-if selection == "PDF":
+    #print(halu_t)
+    if selection =="ChatGpt":
+        initial_not_select(option)
 
-    uploaded_file = st.file_uploader("PDF 기반 답변", type=["pdf"],accept_multiple_files=True)
-    for file in uploaded_file:
-        pages = load_pdf(file)
-        print(pages)
-        print(type(pages))
-    try:
-        rag_chain = chaining(pages, option, halu)
-       # print(rag_chain)
+    if selection == "PDF":
+
+        uploaded_file = st.file_uploader("PDF 기반 답변", type=["pdf"],accept_multiple_files=True)
+        for file in uploaded_file:
+            pages = load_pdf(file)
+            print(pages)
+            print(type(pages))
+        try:
+            rag_chain = chaining(pages, option, halu)
+           # print(rag_chain)
+            chat_history = StreamlitChatMessageHistory(key="chat_messages")
+            if "messages" not in st.session_state:
+                st.session_state["messages"] = [{"role": "assistant",
+                                                 "content": "무엇이든 물어!"}]
+
+            conversational_rag_chain = RunnableWithMessageHistory(
+                rag_chain,
+                lambda session_id: chat_history,
+                input_messages_key="input",
+                history_messages_key="history",
+                output_messages_key="answer",
+            )
+
+
+            for msg in chat_history.messages:
+                st.chat_message(msg.type).write(msg.content)
+
+            if prompt_message := st.chat_input("Your question"):
+                st.chat_message("human").write(prompt_message)
+                with st.chat_message("ai"):
+                    with st.spinner("Thinking..."):
+                        config = {"configurable": {"session_id": "any"}}
+                        response = conversational_rag_chain.invoke(
+                            {"input": prompt_message},
+                            config)
+
+                        answer = response['answer']
+                        st.write(answer)
+                        #with st.expander("참고 문서 확인"):
+                         #   for doc in response['context']:
+                          #      st.markdown(doc.metadata['source'], help=doc.page_content)
+        except:
+            st.header("📚 PDF 업로드 해주세요.")
+            st.header("1.파일명은 영어 2.한번에 여러 파일 업로드")
+
+    elif selection == "Database":
+        rag_chain = initialize_components(option, halu)
         chat_history = StreamlitChatMessageHistory(key="chat_messages")
-        if "messages" not in st.session_state:
-            st.session_state["messages"] = [{"role": "assistant",
-                                             "content": "무엇이든 물어!"}]
+
 
         conversational_rag_chain = RunnableWithMessageHistory(
             rag_chain,
@@ -237,7 +275,10 @@ if selection == "PDF":
             history_messages_key="history",
             output_messages_key="answer",
         )
-
+        print(st.session_state)
+        if "messages" not in st.session_state:
+            st.session_state["messages"] = [{"role": "assistant",
+                                             "content": "무엇이든 물어보세요!"}]
 
         for msg in chat_history.messages:
             st.chat_message(msg.type).write(msg.content)
@@ -255,43 +296,5 @@ if selection == "PDF":
                     st.write(answer)
                     #with st.expander("참고 문서 확인"):
                      #   for doc in response['context']:
-                      #      st.markdown(doc.metadata['source'], help=doc.page_content)
-    except:
-        st.header("📚 PDF 업로드 해주세요.")
-        st.header("1.파일명은 영어 2.한번에 여러 파일 업로드")
-
-elif selection == "Database":
-    rag_chain = initialize_components(option, halu)
-    chat_history = StreamlitChatMessageHistory(key="chat_messages")
-
-
-    conversational_rag_chain = RunnableWithMessageHistory(
-        rag_chain,
-        lambda session_id: chat_history,
-        input_messages_key="input",
-        history_messages_key="history",
-        output_messages_key="answer",
-    )
-    print(st.session_state)
-    if "messages" not in st.session_state:
-        st.session_state["messages"] = [{"role": "assistant",
-                                         "content": "무엇이든 물어보세요!"}]
-
-    for msg in chat_history.messages:
-        st.chat_message(msg.type).write(msg.content)
-
-    if prompt_message := st.chat_input("Your question"):
-        st.chat_message("human").write(prompt_message)
-        with st.chat_message("ai"):
-            with st.spinner("Thinking..."):
-                config = {"configurable": {"session_id": "any"}}
-                response = conversational_rag_chain.invoke(
-                    {"input": prompt_message},
-                    config)
-
-                answer = response['answer']
-                st.write(answer)
-                #with st.expander("참고 문서 확인"):
-                 #   for doc in response['context']:
-                  #      st.markdown(doc.metadata['source'], help=doc.page_content)"""
+                      #      st.markdown(doc.metadata['source'], help=doc.page_content)"""
 
