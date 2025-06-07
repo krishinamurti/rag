@@ -17,6 +17,7 @@ from langchain_core.output_parsers import StrOutputParser
 from openai import OpenAI
 #거의 최종버전
 
+
 #오픈AI API 키 설정
 os.environ["OPENAI_API_KEY"] = st.secrets['OPENAI_API_KEY']
 
