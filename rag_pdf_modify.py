@@ -26,7 +26,7 @@ import sqlite3
 #########################
 #오픈AI API 키 설정
 os.environ["OPENAI_API_KEY"] = st.secrets['OPENAI_API_KEY']
-
+os.environ["id"]=st.secrets['id']
 #cache_resource로 한번 실행한 결과 캐싱해두기
 @st.cache_resource
 def load_and_split_pdf(file_path):
@@ -188,7 +188,8 @@ if "logged_in" not in st.session_state:
 #login
 
 def login():
-    if id == "admin" or "a":
+    k = id
+    if k == id:
         st.session_state["logged_in"] = True
         st.success("login succes")
         st.rerun()
