@@ -187,9 +187,8 @@ if "logged_in" not in st.session_state:
 
 #login
 
-def login():
-    k = id
-    if k == id:
+def login(id_in):
+    if id == id_in:
         st.session_state["logged_in"] = True
         st.success("login succes")
         st.rerun()
@@ -198,10 +197,10 @@ def login():
 
 if not st.session_state["logged_in"]:
     st.title("Login")
-    id = st.text_input("ID")
+    id_in = st.text_input("ID")
     pw = st.text_input("password", type="password")
     if st.button("Login"):
-        login()
+        login(id_in)
 else:
 
 
