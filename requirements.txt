@@ -7,4 +7,4 @@ langchain-chroma
 pypdf
 langchain-text-splitters
 tiktoken
-protobuf = ">=3.6.0, !=3.11"
+protobuf == ">=3.6.0, !=3.11"
