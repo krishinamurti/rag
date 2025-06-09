@@ -230,7 +230,7 @@ else:
         initial_not_select(option)
 
     if selection == "PDF":
-        cache_clear()
+        #cache_clear()
         uploaded_file = st.file_uploader("PDF 기반 답변", type=["pdf"],accept_multiple_files=True)
         for file in uploaded_file:
             pages = load_pdf(file)
@@ -275,7 +275,7 @@ else:
             st.header("한번에 여러 파일 업로드")
 
     elif selection == "Database":
-        cache_clear()
+        #cache_clear()
         rag_chain = initialize_components(option, halu)
         chat_history = StreamlitChatMessageHistory(key="chat_messages")
 
