@@ -204,7 +204,7 @@ def login(id_in):
         st.error(("Wrong ID and Password"))
 
 if not st.session_state["logged_in"]:
-    st.title("Login")
+    st.title("Login1")
     id_in = st.text_input("ID")
     pw = st.text_input("password", type="password")
     if st.button("Login"):
