@@ -87,7 +87,6 @@ def initialize_components(selected_model, halu):
     #file_path = r"../data/"
     #file_path = r"C:/Users/Jay/PycharmProjects/test_ai/input3.pdf"
     #pages = load_and_split_pdf(file_path)
-    cache_clear()
     vectorstore = get_vectorstore()
     retriever = vectorstore.as_retriever()
 
@@ -151,7 +150,6 @@ def initial_not_select(selected_model):
 
 @st.cache_resource
 def chaining(_pages,selected_model,halu):
-    cache_clear()
     vectorstore = create_vector_store(_pages)
     retriever = vectorstore.as_retriever()
     #retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 4}) 동일함
@@ -228,9 +226,11 @@ else:
 
     #print(halu_t)
     if selection =="ChatGpt":
+        cache_clear()
         initial_not_select(option)
 
     if selection == "PDF":
+        cache_clear()
         uploaded_file = st.file_uploader("PDF 기반 답변", type=["pdf"],accept_multiple_files=True)
         for file in uploaded_file:
             pages = load_pdf(file)
