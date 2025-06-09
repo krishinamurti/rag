@@ -32,7 +32,7 @@ os.environ["OPENAI_API_KEY"] = st.secrets['OPENAI_API_KEY']
 id = st.secrets['id']
 
 def cache_clear():
-    st.cache_data.clear()  # Clears @st.cache_data cache
+    #st.cache_data.clear()  # Clears @st.cache_data cache
     st.cache_resource.clear()  # Clears @st.cache_resource cache
     #caching.clear_cache()
 #cache_resource로 한번 실행한 결과 캐싱해두기
