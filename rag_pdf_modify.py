@@ -98,7 +98,7 @@ def initialize_components(selected_model, halu):
     # 질문-답변 시스템 프롬프트
     qa_system_prompt = """You are an assistant for question-answering tasks. \
     Use the following pieces of retrieved context to answer the question. \
-    If you don't know the answer, say that this answer isn't based uploaded documents when you answer. \
+    If you don't know the answer, say that you don't know. \
     Keep the answer perfect. please use imogi with the answer.
     대답은 한국어로 하고, 존댓말을 써줘.\
     {context}"""
@@ -160,7 +160,7 @@ def chaining(_pages,selected_model,halu):
     #이 부분의 시스템 프롬프트는 기호에 따라 변경하면 됩니다.
     qa_system_prompt = """You are an assistant for question-answering tasks. \
     Use the following pieces of retrieved context to answer the question. \
-    If you don't know the answer, say that this answer isn't based uploaded documents when you answer. \
+    If you don't know the answer, say that that you don't know. \
     Keep the answer perfect. please use imogi with the answer.
     대답은 한국어로 하고, 존댓말을 써줘.\
     {context}"""
@@ -263,7 +263,7 @@ else:
                           #      st.markdown(doc.metadata['source'], help=doc.page_content)
         except:
             st.header("📚 PDF 업로드 해주세요.")
-            st.header("1.파일명은 영어 2.한번에 여러 파일 업로드")
+            st.header("한번에 여러 파일 업로드")
 
     elif selection == "Database":
         rag_chain = initialize_components(option, halu)
