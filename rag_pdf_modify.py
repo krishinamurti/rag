@@ -25,9 +25,8 @@ from openai import OpenAI
 import pysqlite3
 import sys
 import sqlite3
-
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
-#import sqlite3
+
 #########################
 #오픈AI API 키 설정
 os.environ["OPENAI_API_KEY"] = st.secrets['OPENAI_API_KEY']
@@ -222,10 +221,10 @@ else:
     selection = st.selectbox("ChatGpt,기존 Database(노하우 등), PDF ", ("ChatGpt", "Database", "PDF"))
     option = st.selectbox("Select GPT Model", ("gpt-4.1-mini", "gpt-4.1"))
     #st.slider('몇살인가요?', 0, 130, 25)
-    halu_t = st.slider("기존 문서로 답변: 0, 창의력 추가 답변: 1", 0.0,1.0,(0.0))
-    #halu = st.selectbox("기존 문서로 답변: 0, 창의력 추가 답변: 1",("0","0.5","1"))
+    #halu_t = st.slider("기존 문서로 답변: 0, 창의력 추가 답변: 1", 0.0,1.0,(0.0))
+    halu = st.selectbox("기존 문서로 답변: 0, 창의력 추가 답변: 1",("0","0.5","1"))
 
-    halu= str(halu_t)
+    #halu= str(halu_t)
 
     #print(halu_t)
     if selection =="ChatGpt":
