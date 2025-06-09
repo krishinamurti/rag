@@ -107,7 +107,9 @@ def initialize_components(selected_model, halu):
     # 질문-답변 시스템 프롬프트
     qa_system_prompt = """You are an assistant for question-answering tasks. \
     Use the following pieces of retrieved context to answer the question. \
-    If you don't know the answer, say that you don't know. \
+    Please say answer only based pieces of retrieved context.\
+    If you don't know the answers, Please say you don't know. \
+    
     Keep the answer perfect. please use imogi with the answer.
     대답은 한국어로 하고, 존댓말을 써줘.\
     {context}"""
