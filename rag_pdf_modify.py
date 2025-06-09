@@ -208,6 +208,7 @@ if not st.session_state["logged_in"]:
     id_in = st.text_input("ID")
     pw = st.text_input("password", type="password")
     if st.button("Login"):
+        cache_clear()
         print(id_in)
         print(id)
         login(id_in)
