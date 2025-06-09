@@ -268,7 +268,7 @@ else:
                          #   for doc in response['context']:
                           #      st.markdown(doc.metadata['source'], help=doc.page_content)
         except:
-            st.header("📚 PDF 업로드 해주세요.")
+            st.header("📚 PDF 업로드 해주세요!")
             st.header("한번에 여러 파일 업로드")
 
     elif selection == "Database":
