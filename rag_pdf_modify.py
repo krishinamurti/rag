@@ -84,7 +84,7 @@ def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 # PDF 문서 로드-벡터 DB 저장-검색기-히스토리 모두 합친 Chain 구축
 @st.cache_resource
-def initialize_components(selected_model, halu):
+def initialize_components(selected_model):
     #file_path = r"../data/"
     #file_path = r"C:/Users/Jay/PycharmProjects/test_ai/input3.pdf"
     #pages = load_and_split_pdf(file_path)
@@ -120,7 +120,7 @@ def initialize_components(selected_model, halu):
         ]
     )
 #토큰제한 어떻게하지?
-    llm = ChatOpenAI(model=selected_model,temperature=halu)
+    llm = ChatOpenAI(model=selected_model,temperature=0)
     #ChatOpenAI(model_name='gpt-4o',
     #    n=1,stop=None, temperature=1.0, api_key=OPENAI_API_KEY)
     #temp가 0이면 거짓말을 하지 않고 문서기반으로 답변을 함
@@ -151,7 +151,7 @@ def initial_not_select(selected_model):
         st.chat_message("assistant").write(msg)
 
 @st.cache_resource
-def chaining(_pages,selected_model,halu):
+def chaining(_pages,selected_model):
     vectorstore = create_vector_store(_pages)
     retriever = vectorstore.as_retriever()
     #retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 4}) 동일함
@@ -182,7 +182,7 @@ def chaining(_pages,selected_model,halu):
             ("human", "{input}"),
         ]
     )
-    llm = ChatOpenAI(model=selected_model,temperature=halu)
+    llm = ChatOpenAI(model=selected_model,temperature=0)
     #ChatOpenAI(model_name='gpt-4o',
     #    n=1,stop=None, temperature=1.0, api_key=OPENAI_API_KEY)
     #temp가 0이면 거짓말을 하지 않고 문서기반으로 답변을 함
@@ -224,7 +224,7 @@ else:
     option = st.selectbox("Select GPT Model", ("gpt-4.1-mini", "gpt-4.1"))
     #st.slider('몇살인가요?', 0, 130, 25)
     #halu_t = st.slider("기존 문서로 답변: 0, 창의력 추가 답변: 1", 0.0,1.0,(0.0))
-    halu = st.selectbox("기존 문서로 답변: 0, 창의력 추가 답변: 1",("0","0.5","1"))
+    #halu = st.selectbox("기존 문서로 답변: 0, 창의력 추가 답변: 1",("0","0.5","1"))
 
     #halu= str(halu_t)
 
@@ -241,7 +241,7 @@ else:
             print(pages)
             print(type(pages))
         try:
-            rag_chain = chaining(pages, option, halu)
+            rag_chain = chaining(pages, option)
            # print(rag_chain)
             chat_history = StreamlitChatMessageHistory(key="chat_messages")
             if "messages" not in st.session_state:
@@ -279,8 +279,8 @@ else:
             st.header("한번에 여러 파일 업로드")
 
     elif selection == "Database":
-        cache_clear()
-        rag_chain = initialize_components(option, halu)
+        #cache_clear()
+        rag_chain = initialize_components(option)
         chat_history = StreamlitChatMessageHistory(key="chat_messages")
 
 
