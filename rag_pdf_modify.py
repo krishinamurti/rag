@@ -15,6 +15,9 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories.streamlit import StreamlitChatMessageHistory
 from langchain_core.output_parsers import StrOutputParser
 from openai import OpenAI
+
+from streamlit import caching
+
 #거의 최종버전
 ################### 배포 때문에 추가
 ###https://discuss.streamlit.io/t/chromadb-sqlite3-your-system-has-an-unsupported-version-of-sqlite3/90975
@@ -31,7 +34,8 @@ id = st.secrets['id']
 def cache_clear():
     st.cache_data.clear()  # Clears @st.cache_data cache
     st.cache_resource.clear()  # Clears @st.cache_resource cache
-
+    st.experimental_rerun()
+    #caching.clear_cache()
 #cache_resource로 한번 실행한 결과 캐싱해두기
 @st.cache_resource
 def load_and_split_pdf(file_path):
