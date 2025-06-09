@@ -16,7 +16,7 @@ from langchain_community.chat_message_histories.streamlit import StreamlitChatMe
 from langchain_core.output_parsers import StrOutputParser
 from openai import OpenAI
 
-from streamlit import caching
+#from streamlit import caching
 
 #거의 최종버전
 ################### 배포 때문에 추가
