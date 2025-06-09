@@ -24,8 +24,10 @@ from openai import OpenAI
 
 import pysqlite3
 import sys
-sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 import sqlite3
+
+sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+#import sqlite3
 #########################
 #오픈AI API 키 설정
 os.environ["OPENAI_API_KEY"] = st.secrets['OPENAI_API_KEY']
