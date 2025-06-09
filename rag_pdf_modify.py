@@ -109,8 +109,7 @@ def initialize_components(selected_model, halu):
     Use the following pieces of retrieved context to answer the question. \
     Please say answer only based pieces of retrieved context.\
     If you don't know the answers, Please say you don't know. \
-    
-    Keep the answer perfect. please use imogi with the answer.
+    Keep the answer perfect. please use imogi with the answer.\
     대답은 한국어로 하고, 존댓말을 써줘.\
     {context}"""
     qa_prompt = ChatPromptTemplate.from_messages(
@@ -171,8 +170,9 @@ def chaining(_pages,selected_model,halu):
     #이 부분의 시스템 프롬프트는 기호에 따라 변경하면 됩니다.
     qa_system_prompt = """You are an assistant for question-answering tasks. \
     Use the following pieces of retrieved context to answer the question. \
-    If you don't know the answer, say that that you don't know. \
-    Keep the answer perfect. please use imogi with the answer.
+    Please say answer only based pieces of retrieved context.\
+    If you don't know the answers, Please say you don't know. \
+    Keep the answer perfect. please use imogi with the answer.\
     대답은 한국어로 하고, 존댓말을 써줘.\
     {context}"""
 
