@@ -275,7 +275,7 @@ else:
             st.header("한번에 여러 파일 업로드")
 
     elif selection == "Database":
-        #cache_clear()
+        cache_clear()
         rag_chain = initialize_components(option, halu)
         chat_history = StreamlitChatMessageHistory(key="chat_messages")
 
