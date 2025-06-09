@@ -27,6 +27,11 @@ import sqlite3
 #오픈AI API 키 설정
 os.environ["OPENAI_API_KEY"] = st.secrets['OPENAI_API_KEY']
 id = st.secrets['id']
+
+def cache_clear():
+    st.cache_data.clear()  # Clears @st.cache_data cache
+    st.cache_resource.clear()  # Clears @st.cache_resource cache
+
 #cache_resource로 한번 실행한 결과 캐싱해두기
 @st.cache_resource
 def load_and_split_pdf(file_path):
@@ -218,10 +223,11 @@ else:
 
     #print(halu_t)
     if selection =="ChatGpt":
+        cache_clear()
         initial_not_select(option)
 
     if selection == "PDF":
-
+        cache_clear()
         uploaded_file = st.file_uploader("PDF 기반 답변", type=["pdf"],accept_multiple_files=True)
         for file in uploaded_file:
             pages = load_pdf(file)
@@ -266,6 +272,7 @@ else:
             st.header("한번에 여러 파일 업로드")
 
     elif selection == "Database":
+        cache_clear()
         rag_chain = initialize_components(option, halu)
         chat_history = StreamlitChatMessageHistory(key="chat_messages")
 
